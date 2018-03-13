@@ -32,6 +32,7 @@ export default class IrcDocument {
 		this._client.addListener('names', this.pushLineNames.bind(this));
 		this._client.addListener('message', this.pushLineMessage.bind(this));
 		this._client.addListener('join', this.pushLineJoin.bind(this));
+		this._client.addListener('part', this.pushLineJoin.bind(this));
 
 		// Join the channel
 		this._client.join('#testo');
@@ -63,6 +64,11 @@ export default class IrcDocument {
 
 	private pushLineJoin(channel, nick, message) {
 		this._lines.push(nick + ' has joined channel ' + channel);
+		this._emitter.fire(this._uri);
+	}
+
+	private pushLinePart(channel, nick, reason, message) {
+		this._lines.push(nick + ' has left channel ' + channel + ' (reason: ' + reason +')');
 		this._emitter.fire(this._uri);
 	}
 
