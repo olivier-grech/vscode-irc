@@ -52,7 +52,7 @@ let seq = 0;
 export function generateUri(ircInstance: IrcInstance): vscode.Uri {
 	// The part between the ':' and the '?' will be the title of the tab
 	const query = JSON.stringify([ircInstance._server, ircInstance._port, ircInstance._channel, ircInstance._nick]);
-	return vscode.Uri.parse(`${Provider.scheme}:IRC?${query}#${seq++}`);
+	return vscode.Uri.parse(`${Provider.scheme}:${ircInstance._server}?${query}#${seq++}`);
 }
 
 // Parse an IRC instance from an URI
