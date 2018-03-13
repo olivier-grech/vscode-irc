@@ -22,32 +22,6 @@
 	],
 	"main": "./out/extension",
 	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "IRC configuration",
-			"properties": {
-				"irc.server": {
-					"type": "string",
-					"default": "irc.afternet.org",
-					"description": "The IRC server."
-				},
-				"irc.port": {
-					"type": "number",
-					"default": 6667,
-					"description": "The IRC port."
-				},
-				"irc.channel": {
-					"type": "string",
-					"default": "vscode-irc",
-					"description": "The IRC channel."
-				},
-				"irc.nick": {
-					"type": "string",
-					"default": "vscode-irc",
-					"description": "The IRC nick."
-				}
-			}
-		},
 		"commands": [
 			{
 				"command": "extension.openIrc",
