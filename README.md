@@ -23,7 +23,7 @@ continuing development any further.
 Add the following features:
 * Prompt the user for server address, port, channel and nick (instead of reading
 the configuration)
-* Display a message when a user part the channel
+* Display a message when an user part the channel
 * Display the server address as the tab title
 * Add an icon
 
