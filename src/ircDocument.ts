@@ -32,7 +32,7 @@ export default class IrcDocument {
 		this._client.addListener('names', this.pushLineNames.bind(this));
 		this._client.addListener('message', this.pushLineMessage.bind(this));
 		this._client.addListener('join', this.pushLineJoin.bind(this));
-		this._client.addListener('part', this.pushLineJoin.bind(this));
+		this._client.addListener('part', this.pushLinePart.bind(this));
 
 		// Join the channel
 		this._client.join('#testo');

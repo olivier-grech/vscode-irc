@@ -18,12 +18,18 @@ continuing development any further.
 
 ## Release Notes
 
+### 0.2.1
+
+Fix the following issues:
+* Icon background was not fully transparent
+* THe wrong message was displayed when an user parted the channel
+
 ### 0.2.0
 
 Add the following features:
 * Prompt the user for server address, port, channel and nick (instead of reading
 the configuration)
-* Display a message when a user part the channel
+* Display a message when an user part the channel
 * Display the server address as the tab title
 * Add an icon
 
