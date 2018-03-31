@@ -49,10 +49,14 @@
 			}
 		]
 	},
+	"watch": {
+		"test": "{src,test}/*.js"
+	},
 	"scripts": {
 		"vscode:prepublish": "tsc -p ./",
 		"compile": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install"
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"watch": "npm-watch"
 	},
 	"devDependencies": {
 		"tslint": "^3.8.1",
@@ -62,6 +66,7 @@
 		"@types/mocha": "^2.2.32"
 	},
 	"dependencies": {
-		"irc": "^0.5.2"
+		"irc": "^0.5.2",
+		"npm-watch": "^0.3.0"
 	}
 }
