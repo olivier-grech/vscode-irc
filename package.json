@@ -19,13 +19,13 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.openIrc"
+		"onCommand:vscodeIrc.openIrc"
 	],
 	"main": "./out/extension",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.openIrc",
+				"command": "vscodeIrc.openIrc",
 				"title": "Open IRC",
 				"category": "IRC"
 			}

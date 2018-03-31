@@ -13,7 +13,7 @@ export function activate(context: ExtensionContext) {
 
 	// Register command that crafts an uri
 	// Open the dynamic document, and shows it in the next editor
-	const commandRegistration = commands.registerTextEditorCommand('extension.openIrc', editor => {
+	const openIrcCommandRegistration = commands.registerTextEditorCommand('vscodeIrc.openIrc', editor => {
 		let ircConfiguration = workspace.getConfiguration('irc');
 
 		var server = ircConfiguration.get('server') as string;
@@ -27,7 +27,7 @@ export function activate(context: ExtensionContext) {
 
 	context.subscriptions.push(
 		provider,
-		commandRegistration,
+		openIrcCommandRegistration,
 		providerRegistrations
 	);
 }
