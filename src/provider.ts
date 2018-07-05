@@ -1,8 +1,10 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import * as irc from 'irc';  
 import IrcDocument from './ircDocument';
 import IrcInstance from './ircInstance';
+import IrcClientFactory from './ircClientFactory';  
 
 export default class Provider implements vscode.TextDocumentContentProvider {
 
@@ -12,6 +14,8 @@ export default class Provider implements vscode.TextDocumentContentProvider {
 	private _documents = new Map<string, IrcDocument>();
 	private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
 	private _subscriptions: vscode.Disposable;
+	private _ircClientFactory = new IrcClientFactory;  
+
 
 	constructor() {
 		// Listen to the `closeTextDocument`-event which means we must
@@ -55,8 +59,9 @@ export function generateUri(ircInstance: IrcInstance): vscode.Uri {
 	return vscode.Uri.parse(`${Provider.scheme}:${ircInstance._server}?${query}#${seq++}`);
 }
 
-// Parse an IRC instance from an URI
-export function parseUri(uri: vscode.Uri): IrcInstance {
-	let [server, port, channel, nick] = <[string, string, string, string]>JSON.parse(uri.query);
-	return new IrcInstance(server, port, channel, nick); 
+// Parse an IRC instance from an URI and return the given IRC client  
+export function parseUri(uri: vscode.Uri): irc.Client {  
+	let [server, port, channel, nick] = <[string, string, string, string]>JSON.parse(uri.query);  
+	let ircInstance = new IrcInstance(server, port, channel, nick);   
+	return this._ircClientFactory.getClientForInstance(ircInstance);  
 }
