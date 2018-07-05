@@ -57,6 +57,6 @@ export function generateUri(ircInstance: IrcInstance): vscode.Uri {
 
 // Parse an IRC instance from an URI
 export function parseUri(uri: vscode.Uri): IrcInstance {
-	let [server, port, channel, nick] = <[string, number, string, string]>JSON.parse(uri.query);
+	let [server, port, channel, nick] = <[string, string, string, string]>JSON.parse(uri.query);
 	return new IrcInstance(server, port, channel, nick); 
 }

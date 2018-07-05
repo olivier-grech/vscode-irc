@@ -16,13 +16,9 @@ export function activate(context: ExtensionContext) {
 	const openIrcCommandRegistration = commands.registerTextEditorCommand('vscodeIrc.openIrc', editor => {
 		let ircConfiguration = workspace.getConfiguration('irc');
 
-		var server = ircConfiguration.get('server') as string;
-		var port = ircConfiguration.get('port') as number;
-		var channel = ircConfiguration.get('channel') as string;
-		var nick = ircConfiguration.get('nick') as string;
-		var ircInstance = new IrcInstance(server, port, channel, nick);
-
-		askForServer(ircInstance, editor);
+		askUserForIrcInstance().then(value => {
+			openIrcDocument(value, editor);
+		});
 	});
 
 	context.subscriptions.push(
@@ -32,52 +28,21 @@ export function activate(context: ExtensionContext) {
 	);
 }
 
-function askForServer(ircInstance: IrcInstance, editor) {
-	let options: InputBoxOptions = {
-		prompt: "Server: ",
-		placeHolder: "server"
-	}
-
-	window.showInputBox(options).then(value => {
-		ircInstance._server = value;
-		askForPort(ircInstance, editor);
-	});
+async function askUserForIrcInstance() {
+	var server = await askUserForValue('Server', 'server');
+	var port = await askUserForValue('Port', 'port');
+	var channel = await askUserForValue('Channel', 'channel (without the #)');
+	var nick = await askUserForValue('Nick', 'nick');
+	return new IrcInstance(server, port, channel, nick);
 }
 
-function askForPort(ircInstance: IrcInstance, editor) {
+function askUserForValue(prompt: string, placeholder: string) {
 	let options: InputBoxOptions = {
-		prompt: "Port: ",
-		placeHolder: "port"
+		prompt: prompt,
+		placeHolder: placeholder
 	}
 
-	window.showInputBox(options).then(value => {
-		ircInstance._port = +value; // Cast value as a number
-		askForChannel(ircInstance, editor);
-	});
-}
-
-function askForChannel(ircInstance: IrcInstance, editor) {
-	let options: InputBoxOptions = {
-		prompt: "Channel: ",
-		placeHolder: "channel (without the #)"
-	}
-
-	window.showInputBox(options).then(value => {
-		ircInstance._channel = value;
-		askForNick(ircInstance, editor);
-	});
-}
-
-function askForNick(ircInstance: IrcInstance, editor) {
-	let options: InputBoxOptions = {
-		prompt: "Nick: ",
-		placeHolder: "nick"
-	}
-
-	window.showInputBox(options).then(value => {
-		ircInstance._nick = value;
-		openIrcDocument(ircInstance, editor);
-	});
+	return window.showInputBox(options)
 }
 
 function openIrcDocument(ircInstance: IrcInstance, editor) {
