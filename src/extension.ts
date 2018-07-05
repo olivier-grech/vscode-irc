@@ -1,8 +1,8 @@
 'use strict';
 
-import * as irc from 'irc'; 
+import * as irc from 'irc';
 import { workspace, languages, window, commands, ExtensionContext, Disposable, InputBoxOptions } from 'vscode';  
-import ContentProvider, { generateUri } from './provider';  
+import ContentProvider, { generateUri } from './provider';
 import IrcInstance from './ircInstance';
 
 export function activate(context: ExtensionContext) {
@@ -23,10 +23,10 @@ export function activate(context: ExtensionContext) {
 	});
 
 	const sendMessageCommandRegistration = commands.registerTextEditorCommand("vscodeIrc.sendMessage", editor => {  
-		// Get the URI of the active tab  
-		// If we can get an IRC client from it, send a message!  
-		var ircClient = new irc.Client();  
-		ircClient = provider.getClientFromUri(editor.document.uri);    
+		// Get the URI of the active tab
+		// If we can get an IRC client from it, send a message!
+		var ircClient = new irc.Client();
+		ircClient = provider.getClientFromUri(editor.document.uri);
 
 		// Find the name of the channel in the JavaScript object
 		// TODO: this is quite ugly, maybe find a more elegant way
