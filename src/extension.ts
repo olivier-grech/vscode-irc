@@ -13,11 +13,11 @@ export function activate(context: ExtensionContext) {
 
 	// Register command that crafts an uri
 	// Open the dynamic document, and shows it in the next editor
-	const openIrcCommandRegistration = commands.registerTextEditorCommand('vscodeIrc.openIrc', editor => {
+	const openIrcCommandRegistration = commands.registerCommand('vscodeIrc.openIrc', () => {
 		let ircConfiguration = workspace.getConfiguration('irc');
 
 		askUserForIrcInstance().then(value => {
-			openIrcDocument(value, editor);
+			openIrcDocument(value);
 		});
 	});
 
@@ -45,7 +45,7 @@ function askUserForValue(prompt: string, placeholder: string) {
 	return window.showInputBox(options)
 }
 
-function openIrcDocument(ircInstance: IrcInstance, editor) {
+function openIrcDocument(ircInstance: IrcInstance) {
 	const uri = generateUri(ircInstance);
-	return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, editor.viewColumn + 1));
+	return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc));
 }
