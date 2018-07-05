@@ -25,10 +25,16 @@ export function activate(context: ExtensionContext) {
 	const sendMessageCommandRegistration = commands.registerTextEditorCommand("vscodeIrc.sendMessage", editor => {  
 		// Get the URI of the active tab  
 		// If we can get an IRC client from it, send a message!  
-		console.log("test");  
 		var ircClient = new irc.Client();  
-		ircClient = parseUri(editor.document.uri);    
-		ircClient.say(ircClient.channels[0], "I'm a bot!");  
+		ircClient = provider.getClientFromUri(editor.document.uri);    
+
+		// Find the name of the channel in the JavaScript object
+		// TODO: this is quite ugly, maybe find a more elegant way
+		var channelName = ircClient.chans[Object.keys(ircClient.chans)[0]].key;
+
+		askUserForValue('Message', 'message').then(value => {
+			ircClient.say(channelName, value);  
+		})
 	});
 
 	context.subscriptions.push(
