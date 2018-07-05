@@ -1,7 +1,8 @@
 'use strict';
 
+import * as irc from 'irc'; 
 import { workspace, languages, window, commands, ExtensionContext, Disposable, InputBoxOptions } from 'vscode';
-import ContentProvider, { generateUri } from './provider';
+import ContentProvider, { generateUri, parseUri } from './provider'; 
 import IrcInstance from './ircInstance';
 
 export function activate(context: ExtensionContext) {
@@ -21,9 +22,19 @@ export function activate(context: ExtensionContext) {
 		});
 	});
 
+	const sendMessageCommandRegistration = commands.registerTextEditorCommand("vscodeIrc.sendMessage", editor => {  
+		// Get the URI of the active tab  
+		// If we can get an IRC client from it, send a message!  
+		console.log("test");  
+		var ircClient = new irc.Client();  
+		ircClient = parseUri(editor.document.uri);    
+		ircClient.say(ircClient.channels[0], "I'm a bot!");  
+	});
+
 	context.subscriptions.push(
 		provider,
 		openIrcCommandRegistration,
+		sendMessageCommandRegistration, 
 		providerRegistrations
 	);
 }

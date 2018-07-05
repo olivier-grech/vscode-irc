@@ -28,6 +28,11 @@
 				"command": "vscodeIrc.openIrc",
 				"title": "Open IRC",
 				"category": "IRC"
+			},
+			{
+				"command": "vscodeIrc.sendMessage", 
+				"title": "Send message", 
+				"category": "IRC" 
 			}
 		],
 		"languages": [
