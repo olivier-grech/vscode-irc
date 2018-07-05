@@ -2,8 +2,6 @@
 
 import * as vscode from 'vscode';
 import * as irc from 'irc';
-import IrcInstance from './ircInstance';
-import { parseUri } from './provider';
 
 export default class IrcDocument {
 
@@ -12,14 +10,12 @@ export default class IrcDocument {
 	private _lines: string[];
 	private _client: irc.Client;
 
-	constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>) {
+	constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>, ircClient: irc.Client) { 
 	
 		this._uri = uri;
 		this._emitter = emitter;
+		this._client = ircClient; 
 		this._lines = [];
-		
-		// Get an IRC client from the URI 
-		this._client = parseUri(this._uri);  
 
 		// Add listeners to this client for a number of events
 		this._client.addListener('error', this.pushLineError.bind(this));
