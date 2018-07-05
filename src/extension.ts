@@ -1,8 +1,8 @@
 'use strict';
 
 import * as irc from 'irc'; 
-import { workspace, languages, window, commands, ExtensionContext, Disposable, InputBoxOptions } from 'vscode';
-import ContentProvider, { generateUri, parseUri } from './provider'; 
+import { workspace, languages, window, commands, ExtensionContext, Disposable, InputBoxOptions } from 'vscode';  
+import ContentProvider, { generateUri } from './provider';  
 import IrcInstance from './ircInstance';
 
 export function activate(context: ExtensionContext) {
