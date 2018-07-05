@@ -18,13 +18,8 @@ export default class IrcDocument {
 		this._emitter = emitter;
 		this._lines = [];
 		
-		// Get an IRC instance from the URI
-		let ircInstance = parseUri(this._uri);
-
-		// Create a IRC client from the IRC instance
-		this._client = new irc.Client(ircInstance._server, ircInstance._nick, {
-			channels: ['#'+ircInstance._channel]
-		});
+		// Get an IRC client from the URI 
+		this._client = parseUri(this._uri);  
 
 		// Add listeners to this client for a number of events
 		this._client.addListener('error', this.pushLineError.bind(this));
