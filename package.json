@@ -2,7 +2,7 @@
 	"name": "vscode-irc",
 	"displayName": "IRC",
 	"description": "Open an IRC channel in the editor",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"publisher": "olivier-grech",
 	"icon": "images/icon.png",
 	"repository": {
