@@ -65,13 +65,14 @@
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.32",
-		"@types/node": "^6.0.40",
+		"@types/node": "^6.0.114",
 		"tslint": "^3.8.1",
-		"typescript": "^2.0.3",
+		"typescript": "^2.9.2",
 		"vscode": "^1.1.18"
 	},
 	"dependencies": {
 		"irc": "^0.5.2",
+		"mkdirp": "^0.5.1",
 		"npm-watch": "^0.3.0"
 	}
 }
