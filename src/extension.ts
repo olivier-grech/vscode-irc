@@ -1,6 +1,7 @@
 'use strict';
 
-import { workspace, languages, window, commands, ExtensionContext, Disposable, InputBoxOptions } from 'vscode';
+import * as irc from 'irc';
+import { workspace, languages, window, commands, ExtensionContext, Disposable, InputBoxOptions } from 'vscode';  
 import ContentProvider, { generateUri } from './provider';
 import IrcInstance from './ircInstance';
 
@@ -13,74 +14,55 @@ export function activate(context: ExtensionContext) {
 
 	// Register command that crafts an uri
 	// Open the dynamic document, and shows it in the next editor
-	const commandRegistration = commands.registerTextEditorCommand('extension.openIrc', editor => {
+	const openIrcCommandRegistration = commands.registerCommand('vscodeIrc.openIrc', () => {
 		let ircConfiguration = workspace.getConfiguration('irc');
 
-		var server = ircConfiguration.get('server') as string;
-		var port = ircConfiguration.get('port') as number;
-		var channel = ircConfiguration.get('channel') as string;
-		var nick = ircConfiguration.get('nick') as string;
-		var ircInstance = new IrcInstance(server, port, channel, nick);
+		askUserForIrcInstance().then(value => {
+			openIrcDocument(value);
+		});
+	});
 
-		askForServer(ircInstance, editor);
+	const sendMessageCommandRegistration = commands.registerTextEditorCommand("vscodeIrc.sendMessage", editor => {  
+		// Get the URI of the active tab
+		// If we can get an IRC client from it, send a message!
+		var ircClient = new irc.Client();
+		ircClient = provider.getClientFromUri(editor.document.uri);
+
+		// Find the name of the channel in the JavaScript object
+		// TODO: this is quite ugly, maybe find a more elegant way
+		var channelName = ircClient.chans[Object.keys(ircClient.chans)[0]].key;
+
+		askUserForValue('Message', 'message').then(value => {
+			ircClient.say(channelName, value);  
+		})
 	});
 
 	context.subscriptions.push(
 		provider,
-		commandRegistration,
+		openIrcCommandRegistration,
+		sendMessageCommandRegistration, 
 		providerRegistrations
 	);
 }
 
-function askForServer(ircInstance: IrcInstance, editor) {
-	let options: InputBoxOptions = {
-		prompt: "Server: ",
-		placeHolder: "server"
-	}
-
-	window.showInputBox(options).then(value => {
-		ircInstance._server = value;
-		askForPort(ircInstance, editor);
-	});
+async function askUserForIrcInstance() {
+	var server = await askUserForValue('Server', 'server');
+	var port = await askUserForValue('Port', 'port');
+	var channel = await askUserForValue('Channel', 'channel (without the #)');
+	var nick = await askUserForValue('Nick', 'nick');
+	return new IrcInstance(server, port, channel, nick);
 }
 
-function askForPort(ircInstance: IrcInstance, editor) {
+function askUserForValue(prompt: string, placeholder: string) {
 	let options: InputBoxOptions = {
-		prompt: "Port: ",
-		placeHolder: "port"
+		prompt: prompt,
+		placeHolder: placeholder
 	}
 
-	window.showInputBox(options).then(value => {
-		ircInstance._port = +value; // Cast value as a number
-		askForChannel(ircInstance, editor);
-	});
+	return window.showInputBox(options)
 }
 
-function askForChannel(ircInstance: IrcInstance, editor) {
-	let options: InputBoxOptions = {
-		prompt: "Channel: ",
-		placeHolder: "channel (without the #)"
-	}
-
-	window.showInputBox(options).then(value => {
-		ircInstance._channel = value;
-		askForNick(ircInstance, editor);
-	});
-}
-
-function askForNick(ircInstance: IrcInstance, editor) {
-	let options: InputBoxOptions = {
-		prompt: "Nick: ",
-		placeHolder: "nick"
-	}
-
-	window.showInputBox(options).then(value => {
-		ircInstance._nick = value;
-		openIrcDocument(ircInstance, editor);
-	});
-}
-
-function openIrcDocument(ircInstance: IrcInstance, editor) {
+function openIrcDocument(ircInstance: IrcInstance) {
 	const uri = generateUri(ircInstance);
-	return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, editor.viewColumn + 1));
+	return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc));
 }

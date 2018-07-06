@@ -2,8 +2,6 @@
 
 import * as vscode from 'vscode';
 import * as irc from 'irc';
-import IrcInstance from './ircInstance';
-import { parseUri } from './provider';
 
 export default class IrcDocument {
 
@@ -12,30 +10,21 @@ export default class IrcDocument {
 	private _lines: string[];
 	private _client: irc.Client;
 
-	constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>) {
+	constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>, ircClient: irc.Client) { 
 	
 		this._uri = uri;
 		this._emitter = emitter;
+		this._client = ircClient; 
 		this._lines = [];
-		
-		// Get an IRC instance from the URI
-		let ircInstance = parseUri(this._uri);
-
-		// Create a IRC client from the IRC instance
-		this._client = new irc.Client(ircInstance._server, ircInstance._nick, {
-			channels: ['#'+ircInstance._channel]
-		});
 
 		// Add listeners to this client for a number of events
 		this._client.addListener('error', this.pushLineError.bind(this));
 		this._client.addListener('motd', this.pushLineMotd.bind(this));
 		this._client.addListener('names', this.pushLineNames.bind(this));
 		this._client.addListener('message', this.pushLineMessage.bind(this));
+		this._client.addListener('selfMessage', this.pushLineSelfMessage.bind(this)); 
 		this._client.addListener('join', this.pushLineJoin.bind(this));
 		this._client.addListener('part', this.pushLinePart.bind(this));
-
-		// Join the channel
-		this._client.join('#testo');
 	}
 
 	private pushLineError(message) {
@@ -60,6 +49,11 @@ export default class IrcDocument {
 	private pushLineMessage(from, to, message) {
 		this._lines.push('<'+from+'>' + ' ' + message);
 		this._emitter.fire(this._uri);
+	}
+
+	private pushLineSelfMessage(to, message) {
+		this._lines.push('<'+this._client.nick+'>' + ' ' + message); 
+		this._emitter.fire(this._uri); 
 	}
 
 	private pushLineJoin(channel, nick, message) {
